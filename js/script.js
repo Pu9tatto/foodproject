@@ -4,27 +4,20 @@
 window.addEventListener('DOMContentLoaded', () => {
     const tabs = document.querySelectorAll('.tabheader__item'),
         tabsContent = document.querySelectorAll('.tabcontent'),
-        tabsParent = document.querySelector('.tabheader__items');
-
-
-    function hideTabContent() {
-        tabsContent.forEach(item => {
-            item.style.display = 'none';
-        });
-        tabs.forEach(item => {
-            item.classList.remove('tabheader__item_active');
-        });
-    }
-
-    function showTabContent(i = 0) {
-        tabsContent[i].style.display = 'block';
-        tabs[i].classList.add('tabheader__item_active');
-    }
-
+        tabsParent = document.querySelector('.tabheader__items'),
+        deadline = '2021-05-11',
+        modalTrigger = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'),
+        modalTimerId = setTimeout(openModal, 50000),
+        forms = document.querySelectorAll('form'),
+        message = {
+            loading: 'img/form/spinner.svg',
+            success: 'Всё будет',
+            failure: 'что-то пошло не ток'
+        };
 
     hideTabContent();
     showTabContent();
-
 
     tabsParent.addEventListener('click', (e) => {
         if (e.target && e.target.classList.contains('tabheader__item')) {
@@ -36,79 +29,16 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
     // timer
-
-    const deadline = '2021-05-11';
-
-    function getTimeRemaning(endtime) {
-        const t = Date.parse(endtime) - Date.parse(new Date()),
-            days = Math.floor(t / (1000 * 60 * 60 * 24)),
-            h = Math.floor((t / (1000 * 60 * 60)) % 24),
-            minuts = Math.floor((t / (1000 * 60)) % 60),
-            seconds = Math.floor((t / 1000) % 60);
-
-        return {
-            'total': t,
-            days,
-            h,
-            minuts,
-            seconds
-        };
-    }
-
-    function get0(num) {
-        if (num >= 0 && num < 10) {
-            return `0${num}`;
-        } else {
-            return num;
-        }
-    }
-
-    function setClock(selector, endtime) {
-        const timer = document.querySelector(selector),
-            days = timer.querySelector('#days'),
-            hours = timer.querySelector('#hours'),
-            minuts = timer.querySelector('#minutes'),
-            seconds = timer.querySelector('#seconds'),
-            timeInterval = setInterval(updateClock, 1000);
-
-        updateClock();
-
-        function updateClock() {
-            const t = getTimeRemaning(endtime);
-
-            if (t.total > 0) {
-
-                days.innerHTML = get0(t.days);
-                days.innerHTML = get0(t.days);
-                hours.innerHTML = get0(t.h);
-                minuts.innerHTML = get0(t.minuts);
-                seconds.innerHTML = get0(t.seconds);
-            } else {
-                clearInterval(timeInterval);
-            }
-        }
-    }
-
     setClock('.timer', deadline);
 
-
     //modal
-
-    const modalTrigger = document.querySelectorAll('[data-modal]'),
-        modal = document.querySelector('.modal');
-
-
     modalTrigger.forEach(btn => {
         btn.addEventListener('click', openModal);
     });
 
-    const modalTimerId = setTimeout(openModal, 50000);
-
     window.addEventListener('scroll', showModalByScroll);
-
-
-
 
     modal.addEventListener('click', (e) => {
         if (e.target === modal || e.target.getAttribute('data-close') == '') {
@@ -122,25 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function closeModal() {
-        modal.classList.add('hide');
-        modal.classList.remove('show');
-        document.body.style.overflow = '';
-    }
 
-    function openModal() {
-        modal.classList.add('show');
-        modal.classList.remove('hide');
-        document.body.style.overflow = 'hidden';
-        clearTimeout(modalTimerId);
-    }
-
-    function showModalByScroll() {
-        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-            openModal();
-            window.removeEventListener('scroll', showModalByScroll);
-        }
-    }
 
     //classs
     class MenuCard {
@@ -209,17 +121,96 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Forms
 
-    const forms = document.querySelectorAll('form');
-
-    const message = {
-        loading: 'img/form/spinner.svg',
-        success: 'Всё будет',
-        failure: 'что-то пошло не ток'
-    };
-
     forms.forEach(item => {
         bindPostData(item);
     });
+
+
+    //funcrions
+
+    function hideTabContent() {
+        tabsContent.forEach(item => {
+            item.style.display = 'none';
+        });
+        tabs.forEach(item => {
+            item.classList.remove('tabheader__item_active');
+        });
+    }
+
+    function showTabContent(i = 0) {
+        tabsContent[i].style.display = 'block';
+        tabs[i].classList.add('tabheader__item_active');
+    }
+
+    function getTimeRemaning(endtime) {
+        const t = Date.parse(endtime) - Date.parse(new Date()),
+            days = Math.floor(t / (1000 * 60 * 60 * 24)),
+            h = Math.floor((t / (1000 * 60 * 60)) % 24),
+            minuts = Math.floor((t / (1000 * 60)) % 60),
+            seconds = Math.floor((t / 1000) % 60);
+
+        return {
+            'total': t,
+            days,
+            h,
+            minuts,
+            seconds
+        };
+    }
+
+    function get0(num) {
+        if (num >= 0 && num < 10) {
+            return `0${num}`;
+        } else {
+            return num;
+        }
+    }
+
+    function setClock(selector, endtime) {
+        const timer = document.querySelector(selector),
+            days = timer.querySelector('#days'),
+            hours = timer.querySelector('#hours'),
+            minuts = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000);
+
+        updateClock();
+
+        function updateClock() {
+            const t = getTimeRemaning(endtime);
+
+            if (t.total > 0) {
+
+                days.innerHTML = get0(t.days);
+                days.innerHTML = get0(t.days);
+                hours.innerHTML = get0(t.h);
+                minuts.innerHTML = get0(t.minuts);
+                seconds.innerHTML = get0(t.seconds);
+            } else {
+                clearInterval(timeInterval);
+            }
+        }
+    }
+
+    function closeModal() {
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    function openModal() {
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        clearTimeout(modalTimerId);
+    }
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
 
     const postData = async (url, data) => {
         const res = await fetch(url, {
@@ -232,8 +223,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
         return await res.json();
     };
-
-
 
     function bindPostData(form) {
         form.addEventListener('submit', (e) => {
@@ -286,9 +275,5 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }, 4000);
     }
-
-    fetch('http://localhost:3000/menu')
-        .then(data => data.json())
-        .then(res => console.log(res));
 
 });
