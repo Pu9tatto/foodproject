@@ -280,11 +280,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //slider
     const slideImg = document.querySelectorAll('.offer__slide'),
+        slider = document.querySelector('.offer__slider'),
         sliderNext = document.querySelector('.offer__slider-next'),
         sliderPrev = document.querySelector('.offer__slider-prev'),
         slidesWrapper = document.querySelector('.offer__slider-wrapper'),
         slidesField = document.querySelector('.offer__slider-inner'),
-        width =window.getComputedStyle(slidesWrapper).width;
+        width = window.getComputedStyle(slidesWrapper).width;
     let indexSlider = 0;
     let offset = 0;
 
@@ -306,41 +307,89 @@ window.addEventListener('DOMContentLoaded', () => {
         slide.style.width = width;
     });
 
-    
-    sliderNext.addEventListener('click', ()=> {
-        if (offset == +width.slice(0, width.length-2)*(slideImg.length-1)){
+    slider.style.position = 'relative';
+
+    const indicators = document.createElement('ol'),
+        dots=[];
+    indicators.classList.add('carousel-indicators');
+    indicators.style.cssText = `
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 15;
+    display: flex;
+    justify-content: center;
+    margin-right: 15%;
+    margin-left: 15%;
+    list-style: none;
+    `;
+    slider.append(indicators);
+
+    for (let i = 0; i < slideImg.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+        box-sizing: content-box;
+        flex: 0 1 auto;
+        width: 30px;
+        height: 6px;
+        margin-right: 3px;
+        margin-left: 3px;
+        cursor: pointer;
+        background-color: #fff;
+        background-clip: padding-box;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        opacity: .5;
+        transition: opacity .6s ease;
+        `;
+        if (i == 0) {
+            dot.style.opacity=1;
+        }
+        indicators.append(dot);
+        dots.push(dot);
+    }
+
+    sliderNext.addEventListener('click', () => {
+        if (offset == +width.slice(0, width.length - 2) * (slideImg.length - 1)) {
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length-2);
+            offset += +width.slice(0, width.length - 2);
         }
 
-        slidesField.style.transform =`translateX(-${offset}px)`;
+        slidesField.style.transform = `translateX(-${offset}px)`;
 
-        if (indexSlider == slideImg.length-1){
+        if (indexSlider == slideImg.length - 1) {
             indexSlider = 0;
-        }else {
+        } else {
             indexSlider++;
         }
 
         velueCurrentSlider();
+
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[indexSlider].style.opacity =1;
     });
 
-    sliderPrev.addEventListener('click', ()=> {
-        if (offset == 0){
-            offset = +width.slice(0, width.length-2)*(slideImg.length-1);
+    sliderPrev.addEventListener('click', () => {
+        if (offset == 0) {
+            offset = +width.slice(0, width.length - 2) * (slideImg.length - 1);
         } else {
-            offset -= +width.slice(0, width.length-2);
+            offset -= +width.slice(0, width.length - 2);
         }
 
-        slidesField.style.transform =`translateX(-${offset}px)`;
+        slidesField.style.transform = `translateX(-${offset}px)`;
 
-        if (indexSlider == 0){
-            indexSlider = slideImg.length-1;
-        }else {
+        if (indexSlider == 0) {
+            indexSlider = slideImg.length - 1;
+        } else {
             indexSlider--;
         }
 
         velueCurrentSlider();
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[indexSlider].style.opacity =1;
     });
 
 
@@ -352,7 +401,19 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+dots.forEach(dot => {
+    dot.addEventListener('click', (e)=> {
+        const slideTo = e.target.getAttribute('data-slide-to');
 
+        indexSlider = slideTo-1;
+        offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+        slidesField.style.transform=`translateX(-${offset}px)`;
+
+        velueCurrentSlider();
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[indexSlider].style.opacity =1;
+    });
+});
 
 
 
