@@ -12,11 +12,18 @@
   },
   "author": "",
   "license": "ISC",
+  "browserslist": [
+    ">1%"
+  ],
   "bugs": {
     "url": "https://github.com/Pu9tatto/foodproject/issues"
   },
   "homepage": "https://github.com/Pu9tatto/foodproject#readme",
   "devDependencies": {
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.14.0",
+    "@babel/preset-env": "^7.14.1",
+    "core-js": "^3.12.0",
     "json-server": "^0.16.3",
     "webpack": "^5.36.2",
     "webpack-cli": "^4.7.0"

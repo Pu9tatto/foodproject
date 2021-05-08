@@ -1,7 +1,7 @@
-function tabs(tabsSelector, tabsContentSelector, tabsParentSelectro, activeClass) {
+function tabs(tabsSelector, tabsContentSelector, tabsParentSelector, activeClass) {
     let tabs = document.querySelectorAll(tabsSelector),
         tabsContent = document.querySelectorAll(tabsContentSelector),
-        tabsParent = document.querySelector(tabsParentSelectro);
+        tabsParent = document.querySelector(tabsParentSelector);
 
     hideTabContent();
     showTabContent();
